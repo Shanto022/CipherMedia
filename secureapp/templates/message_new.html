@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}New Message · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>New Message</h1>
+  <a class="btn-ghost" href="{% url 'messages_inbox' %}">← Back to Inbox</a>
+</div>
+
+<div class="card">
+  <form method="post" class="auth-form" novalidate style="padding:16px">
+    {% csrf_token %}
+    <div class="form-grid-2">
+      <div class="form-control">
+        <label for="to">To (username)</label>
+        <input id="to" name="to" class="input" placeholder="recipient_username" required autocomplete="off" autocapitalize="none" spellcheck="false">
+      </div>
+      <div class="form-control">
+        <label for="title">Title</label>
+        <input id="title" name="title" class="input" placeholder="Subject" required>
+      </div>
+    </div>
+
+    <div class="form-control">
+      <label for="body">Body</label>
+      <textarea id="body" name="body" class="input" rows="8" placeholder="Write your encrypted message..." required></textarea>
+    </div>
+
+    <label class="check-row">
+      <input type="checkbox" name="anonymous">
+      <span>Send as Anonymous</span>
+    </label>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Send Securely</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

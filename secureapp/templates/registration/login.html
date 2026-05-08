@@ -1,0 +1,313 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CipherMedia Login</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:linear-gradient(135deg,#dff3ea,#78c9b0);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            overflow:hidden;
+        }
+
+        .page{
+            width:95vw;
+            height:92vh;
+            background:#eef8f3;
+            border-radius:25px;
+            display:flex;
+            overflow:hidden;
+            box-shadow:0 20px 50px rgba(0,0,0,0.18);
+        }
+
+        .left{
+            flex:1.1;
+            background:linear-gradient(160deg,#cdebd9,#74c8a9);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:40px;
+        }
+
+        .left-content{
+            text-align:center;
+        }
+
+        .circle{
+            width:260px;
+            height:260px;
+            background:#0f766e;
+            border-radius:50%;
+            margin:auto;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+            font-size:80px;
+            box-shadow:0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .left h2{
+            margin-top:25px;
+            color:#064e3b;
+            font-size:34px;
+        }
+
+        .left p{
+            margin-top:10px;
+            color:#14532d;
+            font-size:16px;
+        }
+
+        .right{
+            flex:1;
+            background:#0f766e;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:50px;
+        }
+
+        .login-box{
+            width:100%;
+            max-width:430px;
+            color:white;
+        }
+
+        .login-box h1{
+            font-size:42px;
+            margin-bottom:10px;
+        }
+
+        .login-box p{
+            color:#cdeee5;
+            margin-bottom:35px;
+        }
+
+        .input-group{
+            margin-bottom:18px;
+        }
+
+        .input-group input{
+            width:100%;
+            padding:15px 18px;
+            border-radius:30px;
+            border:1px solid #cdeee5;
+            outline:none;
+            background:transparent;
+            color:white;
+            font-size:15px;
+        }
+
+        .input-group input::placeholder{
+            color:#d8f3ec;
+        }
+
+        .options{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            color:#d8f3ec;
+            font-size:14px;
+            margin:15px 0 30px;
+        }
+
+        .btn{
+            width:100%;
+            padding:15px;
+            border:none;
+            border-radius:30px;
+            background:#e8f7f1;
+            color:#0f766e;
+            font-weight:bold;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        .btn:hover{
+            background:white;
+        }
+
+        .link{
+            text-align:center;
+            margin-top:22px;
+            color:#d8f3ec;
+        }
+
+        .link a{
+            color:white;
+            font-weight:bold;
+            text-decoration:none;
+        }
+
+        .message{
+            background:rgba(255,255,255,0.15);
+            padding:10px;
+            border-radius:10px;
+            margin-bottom:15px;
+            font-size:14px;
+        }
+
+        @media (max-width:850px){
+
+            .page{
+                height:100vh;
+                width:100vw;
+                border-radius:0;
+                flex-direction:column;
+            }
+
+            .left{
+                display:none;
+            }
+
+            .right{
+                flex:1;
+                padding:30px;
+            }
+
+            .login-box h1{
+                font-size:34px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="left">
+        <div class="left-content">
+
+            <div class="circle">🔐</div>
+
+            <h2>Welcome To CipherMedia</h2>
+
+            <p>
+                Secure social platform with encrypted posts and messages
+            </p>
+
+        </div>
+    </div>
+
+    <div class="right">
+
+        <div class="login-box">
+
+            <h1>Welcome Back</h1>
+
+            <p>Login to continue to your secure account</p>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if show_otp %}
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            name="otp" 
+                            placeholder="Enter OTP code" 
+                            required
+                        >
+                    </div>
+
+                    <button class="btn" type="submit">
+                        Verify OTP
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="input-group">
+                        {{ form.username }}
+                    </div>
+
+                    <div class="input-group">
+                        {{ form.password }}
+                    </div>
+
+                    <div class="options">
+
+                        <label>
+                            <input type="checkbox" id="showPassword">
+                            Show Password
+                        </label>
+
+                        <span>Forgot password?</span>
+
+                    </div>
+
+                    <button class="btn" type="submit">
+                        Login
+                    </button>
+
+                </form>
+
+                <div class="link">
+                    New here?
+                    <a href="{% url 'register' %}">
+                        Create account
+                    </a>
+                </div>
+
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const showPassword =
+        document.getElementById("showPassword");
+
+    const passwordField =
+        document.querySelector('input[type="password"]');
+
+    if(showPassword && passwordField){
+
+        showPassword.addEventListener("change", function(){
+
+            if(this.checked){
+                passwordField.type = "text";
+            }
+            else{
+                passwordField.type = "password";
+            }
+
+        });
+
+    }
+
+</script>
+
+</body>
+</html>

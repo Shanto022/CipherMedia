@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Delete Post · ciphermedia App{% endblock %}
+{% block content %}
+
+<div class="card" style="max-width:720px; margin-inline:auto; border:1px solid var(--hairline);">
+  <header class="card-head">
+    <h2 style="margin:0;">Delete Post</h2>
+  </header>
+
+  <div class="card-body" style="display:grid; gap:1rem;">
+    <div class="alert danger" style="padding:1rem; border-radius:12px; background:#3b0d0d; color:#ffd7d7; border:1px solid #6e1a1a;">
+      <strong>Are you sure?</strong> This action cannot be undone. The post and its encrypted content will be permanently removed.
+    </div>
+
+    <div class="kv">
+      <span class="k">Title</span>
+      <span class="v">{{ title|default:"(no title)" }}</span>
+    </div>
+
+    <div class="muted" style="margin-top:.25rem;">
+      Created: {{ post.created_at|date:"M d, Y H:i" }}
+    </div>
+  </div>
+
+  <footer class="card-foot" style="display:flex; gap:.75rem; justify-content:flex-end; align-items:center; flex-wrap:wrap;">
+    <a class="btn-ghost" href="{% url 'index' %}">Cancel</a>
+    <form method="post" style="margin:0; display:inline;">
+      {% csrf_token %}
+      <button type="submit" class="btn-primary">Delete Permanently</button>
+    </form>
+  </footer>
+</div>
+
+{% endblock %}

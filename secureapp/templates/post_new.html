@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}New Post · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>New Post</h1>
+  <a class="btn-ghost" href="{% url 'index' %}">← Back to Dashboard</a>
+</div>
+
+<div class="card">
+  <form method="post" class="auth-form" novalidate style="padding:16px">
+    {% csrf_token %}
+
+    <div class="form-control">
+      <label for="title">Title</label>
+      <input id="title" name="title" class="input" placeholder="A short headline" required>
+    </div>
+
+    <div class="form-control">
+      <label for="body">Body</label>
+      <textarea id="body" name="body" class="input" rows="10" placeholder="Write your encrypted note..." required></textarea>
+    </div>
+    <label><input type="checkbox" name="is_public"> Make this post public</label>
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Save Encrypted Post</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

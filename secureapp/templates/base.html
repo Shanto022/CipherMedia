@@ -1,0 +1,120 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>{% block title %}CipherMedia{% endblock %}</title>
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+    <!-- Prevent theme flash -->
+    <script>
+      (function(){
+        try {
+          const stored = localStorage.getItem('theme-v1');
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored || (prefersDark ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch(e) {}
+      })();
+    </script>
+
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body>
+    <!-- Top Nav -->
+    <header class="site-header">
+      <nav class="nav container">
+        <a class="brand" href="{% url 'index' %}" aria-label="Home">
+          <span class="brand-icon" aria-hidden="true">🔐</span>
+          <span class="brand-name">CipherMedia</span>
+        </a>
+
+        <div class="nav-links">
+          {% if user.is_authenticated %}
+            <a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+            <a href="{% url 'feed' %}">Public Feed</a>  
+            <a href="{% url 'post_new' %}" class="{% if request.path == '/posts/new/' %}active{% endif %}">New Post</a>
+            <a href="{% url 'messages_inbox' %}" class="{% if request.path|slice:':10' == '/messages' %}active{% endif %}">Messages</a>
+          {% else %}
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+          {% endif %}
+        </div>
+
+        <div class="nav-right">
+          <button id="themeToggle" class="btn-ghost small" type="button" aria-label="Toggle color theme" title="Toggle theme">
+            <span class="theme-icon" aria-hidden="true">🌙</span>
+          </button>
+          {% if user.is_authenticated %}
+            <a href="{% url 'profile_update' %}" class="user-chip" title="Edit Profile" style="text-decoration:none;">
+              {% if user.profile_picture %}
+                <img src="{% url 'profile_picture' user.id %}"
+                     style="width:28px; height:28px; border-radius:50%; object-fit:cover;">
+              {% else %}
+                <span class="avatar">{{ user.username|slice:":1"|upper }}</span>
+              {% endif %}
+              <span class="uname">{{ user.username }}</span>
+            </a>
+            <a class="btn-ghost small" href="{% url 'logout' %}">Logout</a>
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+
+    <!-- Flash messages -->
+    {% if messages %}
+      <div class="container">
+        <ul class="flashes" role="status" aria-live="polite">
+          {% for m in messages %}
+            <li class="{{ m.tags }}">{{ m }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- Page content -->
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <small>&copy; {{ now|date:"Y" }} CipherMedia. All rights reserved.</small>
+
+      </div>
+    </footer>
+
+    <!-- Theme + small utilities -->
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const btn = document.getElementById('themeToggle');
+        const icon = btn && btn.querySelector('.theme-icon');
+
+        function setTheme(next) {
+          root.setAttribute('data-theme', next);
+          try { localStorage.setItem('theme-v1', next); } catch (e) {}
+          if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+          btn && btn.setAttribute('aria-label', next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+          btn && btn.setAttribute('title', next === 'dark' ? 'Switch to light theme' : 'Switch to dark theme');
+        }
+
+        btn && btn.addEventListener('click', function () {
+          const current = root.getAttribute('data-theme') || 'light';
+          setTheme(current === 'light' ? 'dark' : 'light');
+        });
+
+        // Sync icon on load
+        const current = root.getAttribute('data-theme') || 'light';
+        if (icon) icon.textContent = current === 'dark' ? '☀️' : '🌙';
+      })();
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

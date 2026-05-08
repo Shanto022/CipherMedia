@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body{
+        background:
+            radial-gradient(circle at top right, rgba(20,184,166,0.10), transparent 28%),
+            radial-gradient(circle at bottom left, rgba(20,184,166,0.08), transparent 22%),
+            linear-gradient(135deg,#f4f7fb,#eef5f9);
+        background-attachment: fixed;
+        background-size: cover;
+    }
+
+    .inbox-page{
+        min-height: calc(100vh - 90px);
+        width: 100%;
+        padding: 55px 30px;
+    }
+
+    .inbox-wrap{
+        width: 100%;
+        max-width: 1250px;
+        margin: auto;
+    }
+
+    .inbox-top{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .title-area{
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .title-icon{
+        width: 78px;
+        height: 78px;
+        border-radius: 24px;
+        background: rgba(20,184,166,0.10);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px;
+    }
+
+    .title-text h1{
+        margin: 0;
+        font-size: 52px;
+        font-weight: 900;
+        color: #17223b;
+    }
+
+    .title-text p{
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .new-message-btn{
+        background: linear-gradient(135deg,#14b8a6,#0f766e);
+        color: white;
+        padding: 18px 28px;
+        border-radius: 16px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 17px;
+        box-shadow: 0 14px 30px rgba(20,184,166,0.25);
+        transition: 0.25s;
+    }
+
+    .new-message-btn:hover{
+        transform: translateY(-2px);
+    }
+
+    .inbox-card{
+        width: 100%;
+        background: rgba(255,255,255,0.90);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: 0 20px 50px rgba(15,23,42,0.10);
+    }
+
+    .msg-row{
+        display: grid;
+        grid-template-columns: 90px 1fr auto auto;
+        align-items: center;
+        gap: 25px;
+        padding: 34px;
+        border-bottom: 1px solid #edf2f7;
+        transition: 0.25s;
+    }
+
+    .msg-row:hover{
+        background: rgba(20,184,166,0.03);
+    }
+
+    .msg-row:last-child{
+        border-bottom: none;
+    }
+
+    .avatar{
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        background: rgba(20,184,166,0.10);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 34px;
+        font-weight: 900;
+        color: #0f766e;
+    }
+
+    .msg-title{
+        font-size: 34px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 10px;
+    }
+
+    .msg-meta{
+        color: #64748b;
+        font-size: 18px;
+    }
+
+    .msg-meta b{
+        color: #0f766e;
+    }
+
+    .mac-ok{
+        padding: 11px 18px;
+        border-radius: 999px;
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #a7f3d0;
+        font-weight: 800;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .mac-bad{
+        padding: 11px 18px;
+        border-radius: 999px;
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        font-weight: 800;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    .open-btn{
+        background: rgba(20,184,166,0.10);
+        color: #0f766e;
+        padding: 14px 24px;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 18px;
+        transition: 0.2s;
+    }
+
+    .open-btn:hover{
+        background: rgba(20,184,166,0.18);
+    }
+
+    .empty-box{
+        width: 100%;
+        padding: 90px;
+        background: white;
+        border-radius: 28px;
+        text-align: center;
+        font-size: 24px;
+        color: #64748b;
+        box-shadow: 0 18px 45px rgba(15,23,42,0.08);
+    }
+
+    .vault-box{
+        max-width: 560px;
+        margin: 70px auto;
+        background: rgba(255,255,255,0.92);
+        padding: 45px;
+        border-radius: 30px;
+        box-shadow: 0 18px 45px rgba(15,23,42,0.10);
+    }
+
+    .vault-box h1{
+        font-size: 42px;
+        margin-bottom: 10px;
+        color: #17223b;
+    }
+
+    .vault-box p{
+        color: #64748b;
+        margin-bottom: 25px;
+        font-size: 17px;
+    }
+
+    .vault-box input{
+        width: 100%;
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid #dbe2ea;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    .vault-box button{
+        width: 100%;
+        padding: 18px;
+        border: none;
+        border-radius: 16px;
+        background: linear-gradient(135deg,#14b8a6,#0f766e);
+        color: white;
+        font-weight: 800;
+        font-size: 17px;
+        cursor: pointer;
+    }
+
+    @media(max-width:900px){
+
+        .msg-row{
+            grid-template-columns: 1fr;
+            text-align: left;
+        }
+
+        .title-text h1{
+            font-size: 38px;
+        }
+
+        .msg-title{
+            font-size: 28px;
+        }
+
+        .inbox-page{
+            padding: 30px 16px;
+        }
+    }
+
+</style>
+
+<div class="inbox-page">
+    <div class="inbox-wrap">
+
+        {% if vault_locked %}
+
+        <div class="vault-box">
+            <h1>🔐 Message Vault</h1>
+
+            {% if has_vault_pass %}
+                <p>Enter your vault password to unlock secure messages.</p>
+            {% else %}
+                <p>Create a vault password to secure your encrypted inbox.</p>
+            {% endif %}
+
+            <form method="POST" action="{% url 'vault_unlock' %}">
+                {% csrf_token %}
+
+                <input type="password"
+                       name="vault_password"
+                       placeholder="Enter vault password"
+                       required>
+
+                <button type="submit">
+                    {% if has_vault_pass %}
+                        Unlock Vault
+                    {% else %}
+                        Create Vault
+                    {% endif %}
+                </button>
+            </form>
+        </div>
+
+        {% else %}
+
+        <div class="inbox-top">
+
+            <div class="title-area">
+                <div class="title-icon">✉️</div>
+
+                <div class="title-text">
+                    <h1>Inbox</h1>
+                    <p>View and manage your secure encrypted messages</p>
+                </div>
+            </div>
+
+            <a href="{% url 'message_new' %}" class="new-message-btn">
+                ✈ New Message
+            </a>
+
+        </div>
+
+        {% if inbox %}
+
+        <div class="inbox-card">
+
+            {% for msg in inbox %}
+
+            <div class="msg-row">
+
+                <div class="avatar">
+                    {{ msg.title|first|upper }}
+                </div>
+
+                <div>
+                    <div class="msg-title">
+                        {{ msg.title }}
+                    </div>
+
+                    <div class="msg-meta">
+                        from <b>{{ msg.from }}</b>
+                        •
+                        {{ msg.created_at|date:"M d, Y • H:i" }}
+                    </div>
+                </div>
+
+                {% if msg.mac_ok %}
+                    <div class="mac-ok">🛡 MAC OK</div>
+                {% else %}
+                    <div class="mac-bad">⚠ MAC Failed</div>
+                {% endif %}
+
+                <a href="{% url 'message_detail' msg.id %}" class="open-btn">
+                    Open →
+                </a>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-box">
+            📭 No messages yet.
+        </div>
+
+        {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Public Feed</h1>
+<ul class="item-list">
+  {% for it in items %}
+    <li class="feed-item">
+      <div class="feed-header">
+        <strong>{{ it.title }}</strong>
+        <div class="muted">by {{ it.author }} — {{ it.created_at|date:"M d, Y H:i" }}</div>
+      </div>
+
+      {% if not it.mac_ok %}
+        <div class="warn">⚠ Integrity check failed</div>
+      {% endif %}
+
+      <p class="feed-body">{{ it.body|truncatechars:400 }}</p>
+
+
+    </li>
+  {% empty %}
+    <li>No public posts yet.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

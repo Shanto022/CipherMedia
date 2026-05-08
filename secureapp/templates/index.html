@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="dash-grid">
+  <!-- Profile / PII -->
+  <section class="card">
+    <header class="card-head">
+      <h2>Your Profile</h2>
+    </header>
+    <div class="card-body">
+      <div class="kv">
+        <span class="k">Email</span>
+        <span class="v">{{ email|default:"—" }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Phone</span>
+        <span class="v">{{ phone|default:"—" }}</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Quick actions -->
+  <section class="card">
+    <header class="card-head">
+      <h2>Quick Actions</h2>
+    </header>
+    <div class="quick-actions">
+      <a class="btn-primary" href="{% url 'post_new' %}">Write a New Post</a>
+      <a class="btn-ghost" href="{% url 'messages_inbox' %}">Open Inbox</a>
+    </div>
+  </section>
+  <!-- Posts -->
+  <section class="card span-2">
+    <header class="card-head">
+      <div class="page-head">
+        <h2>Your Posts</h2>
+        <span class="badge">{{ posts|length }}</span>
+      </div>
+    </header>
+
+    {% if posts %}
+      <ul class="list">
+        {% for p in posts %}
+          <li class="list-row">
+            <div>
+              <div class="list-title">
+                <a href="{% url 'post_detail' p.id %}">
+                  {{ p.title|default:"Untitled" }}
+                </a>
+              </div>
+              <div class="list-sub">
+                <time datetime="{{ p.created_at|date:'c' }}">
+                  {{ p.created_at|date:"M d, Y · H:i" }}
+                </time>
+
+                {% if p.is_public %}
+                  <span class="badge ok">Public</span>
+                {% else %}
+                  <span class="badge fail">Private</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="list-cta">
+              <a class="btn-ghost" href="{% url 'post_detail' p.id %}">View</a>
+              <a class="btn-ghost" href="{% url 'post_edit' p.id %}">Edit</a>
+              <form method="post" action="{% url 'post_toggle' p.id %}" style="display:inline;">
+                {% csrf_token %}
+                {% if p.is_public %}
+                  <button class="btn-ghost small" type="submit">🔒 Make Private</button>
+                {% else %}
+                  <button class="btn-ghost small" type="submit">🌐 Make Public</button>
+                {% endif %}
+              </form>
+              <a class="btn-primary small" href="{% url 'post_delete' p.id %}">Delete</a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="empty">
+        <div class="empty-title">No posts yet</div>
+        <div class="empty-sub muted">Start by writing your first encrypted post.</div>
+        <a class="btn-primary" href="{% url 'post_new' %}">Create Post</a>
+      </div>
+    {% endif %}
+  </section>
+
+
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Edit Post · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>Edit Post</h1>
+  <a class="btn-ghost" href="{% url 'post_detail' post.id %}">← Back</a>
+</div>
+
+{% if messages %}
+  <ul class="flashes">
+    {% for m in messages %}
+      <li class="{{ m.tags }}">{{ m }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="card" style="padding: 24px;">
+  <form method="post" class="auth-form">
+    {% csrf_token %}
+
+    <div class="form-control">
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title"
+             value="{{ title }}" required>
+    </div>
+
+    <div class="form-control">
+      <label for="body">Body</label>
+      <textarea name="body" id="body" rows="10" required>{{ body }}</textarea>
+    </div>
+
+    <label class="check-row">
+      <input type="checkbox" name="is_public" {% if post.is_public %}checked{% endif %}>
+      <span>Make this post public</span>
+    </label>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit">Save Changes</button>
+      <a class="btn-ghost" href="{% url 'post_detail' post.id %}">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

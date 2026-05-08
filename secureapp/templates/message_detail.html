@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Message · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="page-head">
+  <h1>{{ title }}</h1>
+  <a class="btn-ghost" href="{% url 'messages_inbox' %}">← Back to Inbox</a>
+</div>
+
+<div class="card">
+  <div class="card-head">
+    <div class="muted">From</div>
+    <div class="user-chip">
+      <span class="avatar">{{ from|slice:":1"|upper }}</span>
+      <span class="uname">{{ from }}</span>
+    </div>
+    <div style="margin-left:auto">
+      {% if mac_ok %}
+        <span class="badge ok" title="MAC OK">MAC OK</span>
+      {% else %}
+        <span class="badge fail" title="MAC FAILED">MAC FAILED</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card-body">
+    <pre class="readbox">{{ body }}</pre>
+  </div>
+
+  <div class="card-foot muted">
+    Delivered: {{ created_at|date:"M d, Y · H:i" }}
+  </div>
+</div>
+
+{% endblock %}
