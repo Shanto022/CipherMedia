@@ -1,0 +1,3 @@
+icacls "C:\Users\PRONOY\Desktop\ciphermedia - A secure social space for private posts and messages\.env" /inheritance:r
+icacls "C:\Users\PRONOY\Desktop\ciphermedia - A secure social space for private posts and messages\.env" /grant:r "PRONOY:(R)"
+icacls "C:\Users\PRONOY\Desktop\ciphermedia - A secure social space for private posts and messages\.env" /remove "Users" "Authenticated Users" "Everyone"

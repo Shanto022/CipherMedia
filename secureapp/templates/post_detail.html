@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Post · CipherMedia{% endblock %}
+{% block content %}
+
+<div class="card span-2" style="max-width: 900px; margin-inline:auto;">
+  <header class="card-head">
+    <div>
+      <h1 style="margin:0;">{{ title }}</h1>
+      <div class="muted" style="margin-top:.25rem;">
+        by <strong>{{ author|default:request.user.username }}</strong>
+        · {{ created_at|date:"M d, Y H:i" }}
+        {% if is_public %}
+          <span class="badge" style="margin-left:.5rem;">Public</span>
+        {% else %}
+          <span class="badge" style="margin-left:.5rem;">Private</span>
+        {% endif %}
+      </div>
+    </div>
+
+
+  </header>
+
+  <div class="card-body">
+    <article class="prose">
+      <pre style="white-space:pre-wrap; font:inherit; background:var(--panel); padding:1rem; border-radius:12px; line-height:1.6;">
+{{ body }}
+      </pre>
+    </article>
+  </div>
+
+  <footer class="card-foot" style="display:flex; gap:.5rem; justify-content:space-between; align-items:center;">
+    <div class="actions" style="display:flex; gap:.5rem;">
+      <a class="btn-ghost" href="{% url 'index' %}">← Back</a>
+
+      {% if post.user == request.user %}
+        <form method="post" action="{% url 'post_toggle' post.id %}">
+          {% csrf_token %}
+          {% if is_public %}
+            <button class="btn-primary" type="submit">🔒 Make Private</button>
+          {% else %}
+            <button class="btn-primary" type="submit">🌐 Make Public</button>
+          {% endif %}
+        </form>
+      {% endif %}
+
+    </div>
+  </footer>
+</div>
+
+{% endblock %}

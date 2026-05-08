@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="padding:2rem 0;">
+
+  <h2>Admin Dashboard</h2>
+
+  <!-- Users Table -->
+  <h3 style="margin-top:2rem;">All Users</h3>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:2px solid #ddd;">
+        <th style="padding:8px; text-align:left;">Username</th>
+        <th style="padding:8px; text-align:left;">Role</th>
+        <th style="padding:8px; text-align:left;">Joined</th>
+        <th style="padding:8px; text-align:left;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in all_users %}
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:8px;">{{ u.username }}</td>
+        <td style="padding:8px;">{{ u.role }}</td>
+        <td style="padding:8px;">{{ u.date_joined|date:"d M Y" }}</td>
+        <td style="padding:8px; display:flex; gap:8px;">
+
+          <!-- Change Role -->
+          <form method="post" action="{% url 'admin_change_role' u.id %}">
+            {% csrf_token %}
+            <select name="role" style="padding:4px;">
+              <option value="user"  {% if u.role == "user"  %}selected{% endif %}>user</option>
+              <option value="admin" {% if u.role == "admin" %}selected{% endif %}>admin</option>
+            </select>
+            <button type="submit" style="padding:4px 8px;">Set Role</button>
+          </form>
+
+          <!-- Delete User -->
+          {% if u.id != request.user.id %}
+          <form method="post" action="{% url 'admin_delete_user' u.id %}"
+                onsubmit="return confirm('Delete user {{ u.username }}?')">
+            {% csrf_token %}
+            <button type="submit" style="padding:4px 8px; background:#e55; color:#fff; border:none; border-radius:4px; cursor:pointer;">
+              Delete
+            </button>
+          </form>
+          {% endif %}
+
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Posts Table -->
+  <h3 style="margin-top:2rem;">All Posts</h3>
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="border-bottom:2px solid #ddd;">
+        <th style="padding:8px; text-align:left;">Author</th>
+        <th style="padding:8px; text-align:left;">Title</th>
+        <th style="padding:8px; text-align:left;">Visibility</th>
+        <th style="padding:8px; text-align:left;">Date</th>
+        <th style="padding:8px; text-align:left;">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in post_list %}
+      <tr style="border-bottom:1px solid #eee;">
+        <td style="padding:8px;">{{ p.author }}</td>
+        <td style="padding:8px;">{{ p.title }}</td>
+        <td style="padding:8px;">{% if p.is_public %}Public{% else %}Private{% endif %}</td>
+        <td style="padding:8px;">{{ p.created_at|date:"d M Y" }}</td>
+        <td style="padding:8px;">
+          <form method="post" action="{% url 'admin_delete_post' p.id %}"
+                onsubmit="return confirm('Delete this post?')">
+            {% csrf_token %}
+            <button type="submit" style="padding:4px 8px; background:#e55; color:#fff; border:none; border-radius:4px; cursor:pointer;">
+              Delete
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+python manage.py rotate_kek --new-kek "<NEW_BASE64>"
